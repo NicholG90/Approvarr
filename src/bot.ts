@@ -8,6 +8,7 @@
 // TODO: Add other embeds for different overseerr statuses - Pending, Approved, etc - different layouts? definetely different colours
 //TODO: Remove buttons from other embeds
 // TODO Remove logging statements
+// TODO: Look at why everything appears to have Requested Status: Pending
 // Import the necessary modules
 import { Client, GatewayIntentBits } from 'discord.js';
 import { handleWebhook } from './webhooks/webhook';
