@@ -3,6 +3,11 @@
 //TODO: Explore other ways to get environment variables
 //TODO: Error handling - specifically the overseerrSender.ts file and type checking
 // TODO: Better TS - specifically get away from any and create interfaces
+// TODO: Update the README.md file
+// TODO: Set colors of embeds
+// TODO: Add other embeds for different overseerr statuses - Pending, Approved, etc - different layouts? definetely different colours
+//TODO: Remove buttons from other embeds
+// TODO Remove logging statements
 // Import the necessary modules
 import { Client, GatewayIntentBits } from 'discord.js';
 import { handleWebhook } from './webhooks/webhook';
