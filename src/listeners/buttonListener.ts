@@ -27,7 +27,7 @@ export function buttonListener(client: Client) {
         if (customId === 'approve') {
             // Send a PUT request to the Overseerr API to approve the request
             const url = `${process.env.OVERSEERR_URL}/api/v1/request/${requestId}/approve`;
-            await overseerrApi(url, 'PUT')
+            await overseerrApi(url, 'POST')
             // Update the embed with the new title and description
             if (originalMessage) {
                 await updateEmbed(originalMessage, mediaTitle, interaction, 'approve');
@@ -35,7 +35,7 @@ export function buttonListener(client: Client) {
         } else if (customId === 'decline') {
             // Send a PUT request to the Overseerr API to decline the request
             const url = `${process.env.OVERSEERR_URL}/api/v1/request/${requestId}/decline`;
-            await overseerrApi(url, 'PUT')
+            await overseerrApi(url, 'POST')
             // Update the embed with the new title and description
             if (originalMessage) {
                 await updateEmbed(originalMessage, mediaTitle, interaction, 'decline');
