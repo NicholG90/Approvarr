@@ -1,6 +1,8 @@
 //TODO: Add a command handler
 //TODO: Add a check to see if the user is an admin
 //TODO: Explore other ways to get environment variables
+//TODO: Error handling - specifically the overseerrSender.ts file and type checking
+// TODO: Better TS - specifically get away from any and create interfaces
 // Import the necessary modules
 import { Client, GatewayIntentBits } from 'discord.js';
 import { handleWebhook } from './webhooks/webhook';

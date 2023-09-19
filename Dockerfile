@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install project dependencies
 RUN npm install
 
+# Install TypeScript
+RUN npm install -g typescript
+
 # Copy all project files to the working directory
 COPY . .
 
