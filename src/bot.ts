@@ -1,0 +1,45 @@
+//TODO: Add a command handler
+//TODO: Add a check to see if the user is an admin
+//TODO: Explore other ways to get environment variables
+// Import the necessary modules
+import { Client, GatewayIntentBits } from 'discord.js';
+import { handleWebhook } from './webhooks/webhook';
+import { buttonListener } from './listeners/buttonListener';
+
+import * as dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
+
+// Define an async function to start the bot
+async function startBot() {
+    // Create a new Discord client with the specified intents
+    const client = new Client({
+        intents: [
+            GatewayIntentBits.Guilds,
+            GatewayIntentBits.GuildMessages,
+            GatewayIntentBits.MessageContent,
+            GatewayIntentBits.GuildMembers,
+        ],
+    });
+
+    // Get the Discord bot token from the environment variables
+    const token = process.env.BOT_TOKEN;
+    if (!token) {
+        // If the bot token is not defined, throw an error
+        throw new Error('No bot token provided.');
+    }
+    // Start the Discord bot by logging in with the bot token
+    await client.login(token);
+
+    // Start the webhook server
+    handleWebhook(client);
+
+    // Set up button click event listener
+    buttonListener(client);
+}
+// Call the startBot function and handle any errors that occur
+startBot().catch((error) => {
+    console.error('Bot encountered an error:', error);
+});
+
