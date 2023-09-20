@@ -12,8 +12,8 @@ interface ResponseData {
 export async function overseerrApi(
     url: string,
     method: Method,
-    apiKey: string = process.env.OVERSEERR_API_KEY || '',
     requestBody?: RequestBody,
+    apiKey: string = process.env.OVERSEERR_API_KEY || '',
 ): Promise<ResponseData> {
     // Check if the Overseerr API key is defined
     try {
@@ -29,10 +29,11 @@ export async function overseerrApi(
             headers,
             data: requestBody,
         });
-        console.log(response.data)
+        console.log(response.data);
         // Return the response data
         return response.data;
     } catch (error) {
+        console.log(error);
         // Handle any errors here
         throw error;
     }

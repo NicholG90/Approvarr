@@ -1,7 +1,7 @@
 // Import the necessary modules
 import { Client } from 'discord.js';
 import { overseerrApi } from '../helpers/overseerrApi';
-import { updateEmbed } from "../outbound/updateButtons";
+import { updateEmbed } from '../outbound/updateButtons';
 
 export function buttonListener(client: Client) {
     // Listen for button click events
@@ -17,7 +17,7 @@ export function buttonListener(client: Client) {
         // Check if the request ID field was found
         if (!requestIdField) {
             console.error('Request ID field not found.');
-            return
+            return;
         }
         // Get the media title from the embed
         const mediaTitle = interaction.message.embeds[0].title;
@@ -27,7 +27,7 @@ export function buttonListener(client: Client) {
         if (customId === 'approve') {
             // Send a PUT request to the Overseerr API to approve the request
             const url = `${process.env.OVERSEERR_URL}/api/v1/request/${requestId}/approve`;
-            await overseerrApi(url, 'POST')
+            await overseerrApi(url, 'POST');
             // Update the embed with the new title and description
             if (originalMessage) {
                 await updateEmbed(originalMessage, mediaTitle, interaction, 'approve');
@@ -35,7 +35,7 @@ export function buttonListener(client: Client) {
         } else if (customId === 'decline') {
             // Send a PUT request to the Overseerr API to decline the request
             const url = `${process.env.OVERSEERR_URL}/api/v1/request/${requestId}/decline`;
-            await overseerrApi(url, 'POST')
+            await overseerrApi(url, 'POST');
             // Update the embed with the new title and description
             if (originalMessage) {
                 await updateEmbed(originalMessage, mediaTitle, interaction, 'decline');

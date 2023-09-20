@@ -1,21 +1,21 @@
-//TODO: Add a command handler
-//TODO: Add a check to see if the user is an admin
-//TODO: Explore other ways to get environment variables
-//TODO: Error handling - specifically the overseerrSender.ts file and type checking
+// TODO: Add a command handler
+// TODO: Add a check to see if the user is an admin
+// TODO: Explore other ways to get environment variables
+// TODO: Error handling - specifically the overseerrSender.ts file and type checking
 // TODO: Better TS - specifically get away from any and create interfaces
 // TODO: Update the README.md file
 // TODO: Set colors of embeds
 // TODO: Add other embeds for different overseerr statuses - Pending, Approved, etc - different layouts? definetely different colours
-//TODO: Remove buttons from other embeds
+// TODO: Remove buttons from other embeds
 // TODO Remove logging statements
 // TODO: Look at why everything appears to have Requested Status: Pending
-/// TODO: Get Test Webhook from Overseerr working
+// TODO: Get Test Webhook from Overseerr working
+// TODO: Handle requessts that are already cancelled but the buttons are still active
 // Import the necessary modules
 import { Client, GatewayIntentBits } from 'discord.js';
+import * as dotenv from 'dotenv';
 import { handleWebhook } from './webhooks/webhook';
 import { buttonListener } from './listeners/buttonListener';
-
-import * as dotenv from 'dotenv';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -51,4 +51,3 @@ async function startBot() {
 startBot().catch((error) => {
     console.error('Bot encountered an error:', error);
 });
-
