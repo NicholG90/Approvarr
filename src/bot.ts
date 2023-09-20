@@ -4,13 +4,16 @@
 // TODO: Error handling - specifically the overseerrSender.ts file and type checking
 // TODO: Better TS - specifically get away from any and create interfaces
 // TODO: Update the README.md file
-// TODO: Set colors of embeds
-// TODO: Add other embeds for different overseerr statuses - Pending, Approved, etc - different layouts? definetely different colours
-// TODO: Remove buttons from other embeds
 // TODO Remove logging statements
 // TODO: Look at why everything appears to have Requested Status: Pending
-// TODO: Get Test Webhook from Overseerr working
 // TODO: Handle requessts that are already cancelled but the buttons are still active
+// TODO: Issue Comment Button that pops up text input modal
+
+// TODO: Get Test Webhook from Overseerr working - DONE
+// TODO: Add other embeds for different overseerr statuses - Pending, Approved, etc - different layouts? definetely different colours - DONE
+// TODO: Set colors of embeds - DONE
+// TODO: Remove buttons from other embeds - DONE
+
 // Import the necessary modules
 import { Client, GatewayIntentBits } from 'discord.js';
 import * as dotenv from 'dotenv';
