@@ -32,7 +32,6 @@ export function handleWebhook(client: Client) {
         console.log(req.body);
 
         // Send a response to the webhook source
-        res.status(200).send('Webhook data processed successfully.');
         return res.status(200).send('Webhook data processed successfully.');
     });
 }

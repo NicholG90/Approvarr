@@ -13,32 +13,44 @@ export function buttonListener(client: Client) {
         // Get the original message that the button was clicked on
         const originalMessage = await interaction.channel?.messages.fetch(interaction.message.id);
         // Get the request ID from the embed
-        const requestIdField = interaction.message.embeds[0].fields.find((field) => field.name === 'Request ID');
+        const buttonID = interaction.message.embeds[0].fields.find(
+            (field) => field.name === 'Request ID' || field.name === 'Issue ID',
+        );
         // Check if the request ID field was found
-        if (!requestIdField) {
-            console.error('Request ID field not found.');
+        if (!buttonID) {
+            console.error('Request ID or Issue ID field not found.');
             return;
         }
         // Get the media title from the embed
         const mediaTitle = interaction.message.embeds[0].title;
         // Get the request ID from the field value
-        const requestId = requestIdField.value;
+        const uniqueId = buttonID.value;
         // Check if the button is the "Approve" button
         if (customId === 'approve') {
             // Send a PUT request to the Overseerr API to approve the request
-            const url = `${process.env.OVERSEERR_URL}/api/v1/request/${requestId}/approve`;
+            const url = `${process.env.OVERSEERR_URL}/api/v1/request/${uniqueId}/approve`;
             await overseerrApi(url, 'POST');
             // Update the embed with the new title and description
             if (originalMessage) {
                 await updateEmbed(originalMessage, mediaTitle, interaction, 'approve');
             }
-        } else if (customId === 'decline') {
+        }
+        if (customId === 'decline') {
             // Send a PUT request to the Overseerr API to decline the request
-            const url = `${process.env.OVERSEERR_URL}/api/v1/request/${requestId}/decline`;
+            const url = `${process.env.OVERSEERR_URL}/api/v1/request/${uniqueId}/decline`;
             await overseerrApi(url, 'POST');
             // Update the embed with the new title and description
             if (originalMessage) {
                 await updateEmbed(originalMessage, mediaTitle, interaction, 'decline');
+            }
+        }
+        if (customId === 'closeIssue') {
+            // Send a PUT request to the Overseerr API to approve the request
+            const url = `${process.env.OVERSEERR_URL}/api/v1/issue/${uniqueId}/resolved`;
+            await overseerrApi(url, 'POST');
+            // Update the embed with the new title and description
+            if (originalMessage) {
+                await updateEmbed(originalMessage, mediaTitle, interaction, 'resolved');
             }
         }
     });
