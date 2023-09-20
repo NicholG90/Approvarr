@@ -26,7 +26,10 @@ export function handleWebhook(client: Client) {
             return res.status(400).send('No webhook data received.');
         }
         // Send the webhook data to the sendMessage function
+        console.log(req.body)
         sendMessage(client, req.body);
+
+
         // Send a response to the webhook source
         res.status(200).send('Webhook data processed successfully.');
     });
