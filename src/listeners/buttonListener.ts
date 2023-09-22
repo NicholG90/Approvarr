@@ -1,5 +1,7 @@
 // Import the necessary modules
-import { Client } from 'discord.js';
+import {
+    Client, ModalBuilder, TextInputBuilder, ActionRowBuilder, TextInputStyle, ModalActionRowComponentBuilder,
+} from 'discord.js';
 import { overseerrApi } from '../helpers/overseerrApi';
 import { updateEmbed } from '../outbound/updateButtons';
 
@@ -10,8 +12,6 @@ export function buttonListener(client: Client) {
         if (!interaction.isButton()) return;
         // Get the custom ID of the button
         const { customId } = interaction;
-        // Get the original message that the button was clicked on
-        const originalMessage = await interaction.channel?.messages.fetch(interaction.message.id);
         // Get the request ID from the embed
         const buttonID = interaction.message.embeds[0].fields.find(
             (field) => field.name === 'Request ID' || field.name === 'Issue ID',
@@ -31,27 +31,47 @@ export function buttonListener(client: Client) {
             const url = `${process.env.OVERSEERR_URL}/api/v1/request/${uniqueId}/approve`;
             await overseerrApi(url, 'POST');
             // Update the embed with the new title and description
-            if (originalMessage) {
-                await updateEmbed(originalMessage, mediaTitle, interaction, 'approve');
-            }
+            await updateEmbed(interaction.message, mediaTitle, interaction, 'approve');
         }
         if (customId === 'decline') {
             // Send a PUT request to the Overseerr API to decline the request
             const url = `${process.env.OVERSEERR_URL}/api/v1/request/${uniqueId}/decline`;
             await overseerrApi(url, 'POST');
             // Update the embed with the new title and description
-            if (originalMessage) {
-                await updateEmbed(originalMessage, mediaTitle, interaction, 'decline');
-            }
+            await updateEmbed(interaction.message, mediaTitle, interaction, 'decline');
         }
         if (customId === 'closeIssue') {
             // Send a PUT request to the Overseerr API to approve the request
             const url = `${process.env.OVERSEERR_URL}/api/v1/issue/${uniqueId}/resolved`;
             await overseerrApi(url, 'POST');
             // Update the embed with the new title and description
-            if (originalMessage) {
-                await updateEmbed(originalMessage, mediaTitle, interaction, 'resolved');
-            }
+            await updateEmbed(interaction.message, mediaTitle, interaction, 'resolved');
+        }
+        if (customId === 'comment') {
+            // Send a PUT request to the Overseerr API to approve the request
+            const modal = new ModalBuilder()
+                .setCustomId('issueComment')
+                .setTitle('Add Comment');
+
+            // Add components to modal
+            const commentInput = new TextInputBuilder()
+                .setCustomId('commentInput')
+                .setLabel('Add your comment on the issue below')
+                // Paragraph means multiple lines of text.
+                .setStyle(TextInputStyle.Paragraph)
+                .setMaxLength(1000)
+                .setMinLength(5)
+                .setRequired(true);
+
+            // An action row only holds one text input,
+            // so you need one action row per text input.
+            const actionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(commentInput);
+
+            // Add inputs to the modal
+            modal.addComponents(actionRow);
+
+            // Show the modal to the user
+            await interaction.showModal(modal);
         }
     });
 }

@@ -4,11 +4,11 @@ import { EmbedColors, Notification } from '../../constants/notificationData';
 
 export function issueSender(client: Client, payload: any) {
     // TODO: Consider adding a 'comment' button if we can have some way of taking the comment text in
-    // // Create the "Approve" button
-    // const approve = new ButtonBuilder()
-    //     .setCustomId('')
-    //     .setLabel('Approve')
-    //     .setStyle(ButtonStyle.Success);
+    // Create the "Comment" button
+    const comment = new ButtonBuilder()
+        .setCustomId('comment')
+        .setLabel('Add Comment')
+        .setStyle(ButtonStyle.Primary);
     // Create the "Close Issue" button
     const closeIssue = new ButtonBuilder()
         .setCustomId('closeIssue')
@@ -16,7 +16,7 @@ export function issueSender(client: Client, payload: any) {
         .setStyle(ButtonStyle.Danger);
     // Create the action row with the buttons
     const row = new ActionRowBuilder<ButtonBuilder>()
-        .addComponents(closeIssue);
+        .addComponents(closeIssue, comment);
 
     // Define the base color for the embed
     let color = EmbedColors.DARK_PURPLE;

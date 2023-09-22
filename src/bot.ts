@@ -6,19 +6,22 @@
 // TODO: Update the README.md file
 // TODO Remove logging statements
 // TODO: Look at why everything appears to have Requested Status: Pending
-// TODO: Handle requessts that are already cancelled but the buttons are still active
-// TODO: Issue Comment Button that pops up text input modal
 
 // TODO: Get Test Webhook from Overseerr working - DONE
 // TODO: Add other embeds for different overseerr statuses - Pending, Approved, etc - different layouts? definetely different colours - DONE
 // TODO: Set colors of embeds - DONE
 // TODO: Remove buttons from other embeds - DONE
+// TODO: Issue Comment Button that pops up text input modal - Done
+// TODO: Handle requessts that are already cancelled but the buttons are still active - Done - Works by default thanks to overseerr
 
 // Import the necessary modules
 import { Client, GatewayIntentBits } from 'discord.js';
 import * as dotenv from 'dotenv';
 import { handleWebhook } from './webhooks/webhook';
 import { buttonListener } from './listeners/buttonListener';
+import { modalListener } from './listeners/modalListener';
+import { commandListener } from './listeners/commandListener';
+import { commandRegister } from './outbound/commandRegister';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -41,14 +44,29 @@ async function startBot() {
         // If the bot token is not defined, throw an error
         throw new Error('No bot token provided.');
     }
+
+    const channelId = process.env.CHANNEL_ID;
+
+    if (!channelId) {
+        throw new Error('No channel ID provided.');
+    }
+
+    const serverID = process.env.SERVER_ID;
+
+    if (!serverID) {
+        throw new Error('No channel ID provided.');
+    }
     // Start the Discord bot by logging in with the bot token
     await client.login(token);
 
     // Start the webhook server
     handleWebhook(client);
+    commandRegister(client, token, serverID);
 
-    // Set up button click event listener
+    // Set up button click, command and modal event listeners
     buttonListener(client);
+    modalListener(client);
+    commandListener(client);
 }
 // Call the startBot function and handle any errors that occur
 startBot().catch((error) => {

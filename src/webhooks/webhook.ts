@@ -28,8 +28,6 @@ export function handleWebhook(client: Client) {
         }
 
         filterWebhook(client, req.body);
-        // Send the webhook data to the sendMessage function
-        console.log(req.body);
 
         // Send a response to the webhook source
         return res.status(200).send('Webhook data processed successfully.');
