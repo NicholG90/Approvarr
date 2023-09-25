@@ -7,6 +7,7 @@ export async function overseerrApi(
     requestBody?: any,
     apiKey: string = process.env.OVERSEERR_API_KEY || '',
 ): Promise<AxiosResponse> {
+    const apiUrl = `${process.env.OVERSEERR_URL}/api/v1${url}`;
     // Check if the Overseerr API key is defined
     try {
         // Set the request headers
@@ -17,7 +18,7 @@ export async function overseerrApi(
         // Send the request to the Overseerr API
         const response: AxiosResponse = await axios({
             method,
-            url,
+            url: apiUrl,
             headers,
             data: requestBody,
         });

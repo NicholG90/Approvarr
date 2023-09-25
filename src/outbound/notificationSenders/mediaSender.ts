@@ -44,7 +44,7 @@ export function mediaSender(client: Client, payload: any) {
     // Create an embed using the payload data
     const embed = {
         title: payload.subject,
-        url: `${process.env.OVERSEERR_URL}/requests/`,
+        url: '/requests/',
         description: payload.event,
         color,
         fields: [

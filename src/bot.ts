@@ -6,6 +6,7 @@
 // TODO: Update the README.md file
 // TODO Remove logging statements
 // TODO: Look at why everything appears to have Requested Status: Pending
+// TODO: Copy Assets over to the dist folder automatically on build + Fix TMDB Logo
 
 // TODO: Get Test Webhook from Overseerr working - DONE
 // TODO: Add other embeds for different overseerr statuses - Pending, Approved, etc - different layouts? definetely different colours - DONE
@@ -20,6 +21,7 @@ import * as dotenv from 'dotenv';
 import { handleWebhook } from './webhooks/webhook';
 import { buttonListener } from './listeners/buttonListener';
 import { modalListener } from './listeners/modalListener';
+import { selectListener } from './listeners/selectListener';
 import { commandListener } from './listeners/commandListener';
 import { commandRegister } from './outbound/commandRegister';
 
@@ -63,10 +65,11 @@ async function startBot() {
     handleWebhook(client);
     commandRegister(client, token, serverID);
 
-    // Set up button click, command and modal event listeners
+    // Set up event listeners
     buttonListener(client);
     modalListener(client);
     commandListener(client);
+    selectListener(client);
 }
 // Call the startBot function and handle any errors that occur
 startBot().catch((error) => {

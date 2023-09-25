@@ -2,7 +2,7 @@
 import {
     Client, ModalBuilder, TextInputBuilder, ActionRowBuilder, TextInputStyle, ModalActionRowComponentBuilder,
 } from 'discord.js';
-import { overseerrApi } from '../helpers/overseerrApi';
+import { overseerrApi } from '../helpers/apis/overseerr/overseerrApi';
 import { updateEmbed } from '../outbound/updateButtons';
 
 export function buttonListener(client: Client) {
@@ -28,21 +28,21 @@ export function buttonListener(client: Client) {
         // Check if the button is the "Approve" button
         if (customId === 'approve') {
             // Send a PUT request to the Overseerr API to approve the request
-            const url = `${process.env.OVERSEERR_URL}/api/v1/request/${uniqueId}/approve`;
+            const url = `/request/${uniqueId}/approve`;
             await overseerrApi(url, 'POST');
             // Update the embed with the new title and description
             await updateEmbed(interaction.message, mediaTitle, interaction, 'approve');
         }
         if (customId === 'decline') {
             // Send a PUT request to the Overseerr API to decline the request
-            const url = `${process.env.OVERSEERR_URL}/api/v1/request/${uniqueId}/decline`;
+            const url = `/request/${uniqueId}/decline`;
             await overseerrApi(url, 'POST');
             // Update the embed with the new title and description
             await updateEmbed(interaction.message, mediaTitle, interaction, 'decline');
         }
         if (customId === 'closeIssue') {
             // Send a PUT request to the Overseerr API to approve the request
-            const url = `${process.env.OVERSEERR_URL}/api/v1/issue/${uniqueId}/resolved`;
+            const url = `/issue/${uniqueId}/resolved`;
             await overseerrApi(url, 'POST');
             // Update the embed with the new title and description
             await updateEmbed(interaction.message, mediaTitle, interaction, 'resolved');

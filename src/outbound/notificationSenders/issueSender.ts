@@ -3,7 +3,6 @@ import { Client, ActionRowBuilder, ButtonBuilder, ButtonStyle, TextChannel } fro
 import { EmbedColors, Notification } from '../../constants/notificationData';
 
 export function issueSender(client: Client, payload: any) {
-    // TODO: Consider adding a 'comment' button if we can have some way of taking the comment text in
     // Create the "Comment" button
     const comment = new ButtonBuilder()
         .setCustomId('comment')
@@ -39,7 +38,7 @@ export function issueSender(client: Client, payload: any) {
     // Create an embed using the payload data
     const embed = {
         title: payload.subject,
-        url: `${process.env.OVERSEERR_URL}/issues/${payload.issue.id}`,
+        url: `/issues/${payload.issue.id}`,
         description: payload.event,
         color,
         fields: [

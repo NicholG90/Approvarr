@@ -1,5 +1,5 @@
 import { Client } from 'discord.js';
-import { overseerrApi } from '../helpers/overseerrApi';
+import { overseerrApi } from '../helpers/apis/overseerr/overseerrApi';
 
 export function modalListener(client: Client) {
     client.on('interactionCreate', async (interaction) => {
@@ -29,7 +29,7 @@ export function modalListener(client: Client) {
         // Get the request ID from the field value
         const uniqueId = buttonID.value;
 
-        const url = `${process.env.OVERSEERR_URL}/api/v1/issue/${uniqueId}/comment`;
+        const url = `/issue/${uniqueId}/comment`;
         const apiResponse = await overseerrApi(url, 'POST', 'comment', JSON.stringify(messageToPost));
         // check if the response was received successfull
         if (apiResponse.status !== 200) {
