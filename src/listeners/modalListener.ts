@@ -33,9 +33,11 @@ export function modalListener(client: Client) {
         const apiResponse = await overseerrApi(url, 'POST', 'comment', JSON.stringify(messageToPost));
         // check if the response was received successfull
         if (apiResponse.status !== 200) {
-            await interaction.reply({ content: 'Your comment was not submitted successfully - Check the logs!' });
+            await interaction.reply({
+                content: 'Your comment was not submitted successfully - Check the logs!', ephemeral: true,
+            });
             return;
         }
-        await interaction.reply({ content: 'Your comment was submitted successfully!' });
+        await interaction.reply({ content: 'Your comment was submitted successfully!', ephemeral: true });
     });
 }

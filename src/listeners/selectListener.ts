@@ -1,38 +1,54 @@
 import {
-    Client, EmbedBuilder, TextChannel, ButtonBuilder, ButtonStyle, ActionRowBuilder,
+    Client,
+    EmbedBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ActionRowBuilder,
+    StringSelectMenuComponent,
+    ActionRow,
 } from 'discord.js';
 import { overseerrApi } from '../helpers/apis/overseerr/overseerrApi';
 
 export function selectListener(client: Client) {
     client.on('interactionCreate', async (interaction) => {
         if (!interaction.isStringSelectMenu()) return;
-        // Get the data selected by the user
-        const mediaId = interaction.values[0];
+        // Use destructuring to simplify the code
+        const [mediaId] = interaction.values;
         const mediaType = interaction.message?.interaction?.commandName;
+
+        // Use switch instead of if-else statements
         let mediaInfo;
-        if (mediaType === 'request_tv') {
-            mediaInfo = await overseerrApi(`/tv/${mediaId}`, 'get');
-            mediaInfo = mediaInfo.data;
-        } else if (mediaType === 'request_movie') {
-            mediaInfo = await overseerrApi(`/movie/${mediaId}`, 'get');
-            mediaInfo = mediaInfo.data;
-            mediaInfo.name = mediaInfo.title;
+        switch (mediaType) {
+            case 'request_tv':
+                mediaInfo = (await overseerrApi(`/tv/${mediaId}`, 'get')).data;
+                break;
+            case 'request_movie':
+                mediaInfo = (await overseerrApi(`/movie/${mediaId}`, 'get')).data;
+                mediaInfo.name = mediaInfo.title;
+                break;
+            default:
+                console.error('Invalid media type');
+                return;
         }
 
-        // Add Logic to list seasons here
+        // Use template literals instead of string concatenation
+        const posterPath = mediaInfo.posterPath ? `https://image.tmdb.org/t/p/w500${mediaInfo.posterPath}` : null;
+        const tmdbLogoPath = 'https://i.imgur.com/nZTzL4i.jpeg';
+
+        // Use optional chaining to avoid errors when accessing nested properties
         const mediaEmbed = new EmbedBuilder()
             .setColor(0x0099FF)
-            .setTitle(mediaInfo.name)
+            .setTitle(mediaInfo.name ?? '')
             .setURL('https://discord.js.org/')
-            .setDescription(mediaInfo.overview)
-            .setThumbnail('https://i.imgur.com/nZTzL4i.jpeg')
+            .setDescription(mediaInfo.overview ?? '')
+            .setThumbnail(tmdbLogoPath)
             .addFields(
-                { name: 'Regular field title', value: 'Some value here' },
-                { name: '\u200B', value: '\u200B' },
-                { name: 'Media ID', value: mediaInfo.id, inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-            )
-            .setImage(`https://image.tmdb.org/t/p/w500${mediaInfo.posterPath}`);
+                { name: 'Media ID', value: mediaInfo.id?.toString() ?? '', inline: true },
+            );
+        if (posterPath) {
+            mediaEmbed.setImage(posterPath);
+        }
+
         const requestButton = new ButtonBuilder()
             .setCustomId('requestMedia')
             .setLabel('Request')
@@ -60,18 +76,9 @@ export function selectListener(client: Client) {
             row = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(requestButton);
         }
-        // Set the channel ID from the environment variables
-        const channelId = process.env.CHANNEL_ID;
-        // Check if the channel ID is defined
-        if (!channelId) {
-            console.error('Channel ID is undefined in the environment variables.');
-            return;
-        }
-        // Get the channel from the client cache
-        const channel = client.channels.cache.get(channelId) as TextChannel;
-        channel.send({
+        await interaction.update({
             embeds: [mediaEmbed],
-            components: [row],
+            components: [interaction.message.components[0], row],
         });
     });
 }

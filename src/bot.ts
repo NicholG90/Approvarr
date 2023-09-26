@@ -7,6 +7,8 @@
 // TODO Remove logging statements
 // TODO: Look at why everything appears to have Requested Status: Pending
 // TODO: Copy Assets over to the dist folder automatically on build + Fix TMDB Logo
+// TODO: Get existing media as placeholder on select after initial select
+// TODO: Add Year to Select Options
 
 // TODO: Get Test Webhook from Overseerr working - DONE
 // TODO: Add other embeds for different overseerr statuses - Pending, Approved, etc - different layouts? definetely different colours - DONE
@@ -24,6 +26,7 @@ import { modalListener } from './listeners/modalListener';
 import { selectListener } from './listeners/selectListener';
 import { commandListener } from './listeners/commandListener';
 import { commandRegister } from './outbound/commandRegister';
+import { errorListener } from './listeners/errorListener';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -70,6 +73,7 @@ async function startBot() {
     modalListener(client);
     commandListener(client);
     selectListener(client);
+    errorListener(client);
 }
 // Call the startBot function and handle any errors that occur
 startBot().catch((error) => {
