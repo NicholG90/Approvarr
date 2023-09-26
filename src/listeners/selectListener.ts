@@ -29,7 +29,7 @@ export function selectListener(client: Client) {
             .addFields(
                 { name: 'Regular field title', value: 'Some value here' },
                 { name: '\u200B', value: '\u200B' },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
+                { name: 'Media ID', value: mediaInfo.id, inline: true },
                 { name: 'Inline field title', value: 'Some value here', inline: true },
             )
             .setImage(`https://image.tmdb.org/t/p/w500${mediaInfo.posterPath}`);

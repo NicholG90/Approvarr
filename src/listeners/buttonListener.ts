@@ -13,8 +13,9 @@ export function buttonListener(client: Client) {
         // Get the custom ID of the button
         const { customId } = interaction;
         // Get the request ID from the embed
+        console.log(interaction)
         const buttonID = interaction.message.embeds[0].fields.find(
-            (field) => field.name === 'Request ID' || field.name === 'Issue ID',
+            (field) => field.name === 'Request ID' || field.name === 'Issue ID' || field.name === 'Media ID',
         );
         // Check if the request ID field was found
         if (!buttonID) {
@@ -72,6 +73,18 @@ export function buttonListener(client: Client) {
 
             // Show the modal to the user
             await interaction.showModal(modal);
+        }
+        if (customId === 'requestMedia') {
+            // Send a PUT request to the Overseerr API to approve the request
+            const url = `/request/`;
+            const requestBody = {
+                mediaType: 'movie',
+                mediaId: 1061474,
+            };
+            await overseerrApi(url, 'POST', requestBody);
+
+            // Update the embed with the new title and description
+            // await updateEmbed(interaction.message, mediaTitle, interaction, 'request');
         }
     });
 }
