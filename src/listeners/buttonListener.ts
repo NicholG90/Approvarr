@@ -74,12 +74,17 @@ export function buttonListener(client: Client) {
             await interaction.showModal(modal);
         }
         if (customId === 'requestMedia') {
-            // Send a PUT request to the Overseerr API to approve the request
+            // Send a PUT request to the Overseerr API to request the media
+            const requestType = interaction.message.interaction?.commandName.split('_')[1];
+
             const url = `/request/`;
             const requestBody = {
-                mediaType: 'movie',
-                mediaId: 1061474,
+                mediaType: requestType,
+                mediaId: parseInt(uniqueId, 10),
             };
+            if (requestType === 'tv') {
+                // Add Season Information
+            }
             await overseerrApi(url, 'POST', requestBody);
 
             // Update the embed with the new title and description

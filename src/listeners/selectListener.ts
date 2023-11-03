@@ -1,5 +1,11 @@
 import {
-    Client, EmbedBuilder, TextChannel, ButtonBuilder, ButtonStyle, ActionRowBuilder,
+    Client,
+    EmbedBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ActionRowBuilder,
+    StringSelectMenuComponent,
+    ActionRow,
 } from 'discord.js';
 import { overseerrApi } from '../helpers/apis/overseerr/overseerrApi';
 import { EmbedColors } from '../constants/notificationData';
@@ -7,17 +13,23 @@ import { EmbedColors } from '../constants/notificationData';
 export function selectListener(client: Client) {
     client.on('interactionCreate', async (interaction) => {
         if (!interaction.isStringSelectMenu()) return;
-        // Get the data selected by the user
-        const mediaId = interaction.values[0];
+        // Use destructuring to simplify the code
+        const [mediaId] = interaction.values;
         const mediaType = interaction.message?.interaction?.commandName;
+
+        // Use switch instead of if-else statements
         let mediaInfo;
-        if (mediaType === 'request_tv') {
-            mediaInfo = await overseerrApi(`/tv/${mediaId}`, 'get');
-            mediaInfo = mediaInfo.data;
-        } else if (mediaType === 'request_movie') {
-            mediaInfo = await overseerrApi(`/movie/${mediaId}`, 'get');
-            mediaInfo = mediaInfo.data;
-            mediaInfo.name = mediaInfo.title;
+        switch (mediaType) {
+            case 'request_tv':
+                mediaInfo = (await overseerrApi(`/tv/${mediaId}`, 'get')).data;
+                break;
+            case 'request_movie':
+                mediaInfo = (await overseerrApi(`/movie/${mediaId}`, 'get')).data;
+                mediaInfo.name = mediaInfo.title;
+                break;
+            default:
+                console.error('Invalid media type');
+                return;
         }
         // Add Logic to list seasons here
         console.log(mediaInfo);
@@ -74,18 +86,9 @@ export function selectListener(client: Client) {
             row = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(requestButton);
         }
-        // Set the channel ID from the environment variables
-        const channelId = process.env.CHANNEL_ID;
-        // Check if the channel ID is defined
-        if (!channelId) {
-            console.error('Channel ID is undefined in the environment variables.');
-            return;
-        }
-        // Get the channel from the client cache
-        const channel = client.channels.cache.get(channelId) as TextChannel;
-        channel.send({
+        await interaction.update({
             embeds: [mediaEmbed],
-            components: [row],
+            components: [interaction.message.components[0], row],
         });
     });
 }
