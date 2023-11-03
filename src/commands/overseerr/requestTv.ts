@@ -7,7 +7,8 @@ export const data = new SlashCommandBuilder()
     .setDescription('Request a TV series from Overseerr')
     .addStringOption((option) => option
         .setName('tv_title')
-        .setDescription('Enter the TV Series you are requesting'));
+        .setDescription('Enter the TV Series you are requesting')
+        .setRequired(true));
 
 export async function execute(interaction: any) {
     const tvSeries = interaction.options.getString('tv_title');

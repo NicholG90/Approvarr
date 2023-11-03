@@ -2,6 +2,7 @@ import {
     Client, EmbedBuilder, TextChannel, ButtonBuilder, ButtonStyle, ActionRowBuilder,
 } from 'discord.js';
 import { overseerrApi } from '../helpers/apis/overseerr/overseerrApi';
+import { EmbedColors } from '../constants/notificationData';
 
 export function selectListener(client: Client) {
     client.on('interactionCreate', async (interaction) => {
@@ -18,21 +19,34 @@ export function selectListener(client: Client) {
             mediaInfo = mediaInfo.data;
             mediaInfo.name = mediaInfo.title;
         }
-
         // Add Logic to list seasons here
-        const mediaEmbed = new EmbedBuilder()
-            .setColor(0x0099FF)
-            .setTitle(mediaInfo.name)
-            .setURL('https://discord.js.org/')
-            .setDescription(mediaInfo.overview)
-            .setThumbnail('https://i.imgur.com/nZTzL4i.jpeg')
-            .addFields(
-                { name: 'Regular field title', value: 'Some value here' },
-                { name: '\u200B', value: '\u200B' },
-                { name: 'Media ID', value: mediaInfo.id, inline: true },
-                { name: 'Inline field title', value: 'Some value here', inline: true },
-            )
-            .setImage(`https://image.tmdb.org/t/p/w500${mediaInfo.posterPath}`);
+        console.log(mediaInfo);
+        const mediaEmbed = {
+            title: mediaInfo.name,
+            url: mediaType === 'request_movie' ? `${process.env.OVERSEERR_URL}/movie/${mediaInfo.id}`
+                : `${process.env.OVERSEERR_URL}/tv/${mediaInfo.id}`,
+            color: EmbedColors.GREEN,
+            fields: [
+                {
+                    name: 'Description',
+                    value: mediaInfo.overview,
+                },
+                {
+                    name: 'Media ID',
+                    value: mediaInfo.id,
+                    inline: true,
+                },
+                {
+                    name: mediaType === 'request_tv' ? 'First Air Date' : 'Release Date',
+                    value: mediaType === 'request_tv' ? mediaInfo.firstAirDate : mediaInfo.releaseDate,
+                    inline: true,
+                },
+            ],
+            thumbnail: {
+                url: `https://image.tmdb.org/t/p/w500${mediaInfo.posterPath}`,
+            },
+        };
+
         const requestButton = new ButtonBuilder()
             .setCustomId('requestMedia')
             .setLabel('Request')
@@ -50,10 +64,10 @@ export function selectListener(client: Client) {
             .setStyle(ButtonStyle.Danger);
 
         let row;
-        if (mediaInfo.mediaInfo) {
+        if (mediaInfo && mediaInfo.mediaInfo && mediaInfo.mediaInfo.status >= 4) {
             row = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(mediaExists);
-        } else if (mediaInfo.request) {
+        } else if (mediaInfo && mediaInfo.mediaInfo && mediaInfo.mediaInfo.status > 1) {
             row = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(requestExists);
         } else {

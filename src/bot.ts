@@ -1,5 +1,6 @@
 // TODO: Add a command handler
 // TODO: Add a check to see if the user is an admin
+// TODO: Message User when their request is approved/available
 // TODO: Explore other ways to get environment variables
 // TODO: Error handling - specifically the overseerrSender.ts file and type checking
 // TODO: Better TS - specifically get away from any and create interfaces
@@ -7,13 +8,6 @@
 // TODO Remove logging statements
 // TODO: Look at why everything appears to have Requested Status: Pending
 // TODO: Copy Assets over to the dist folder automatically on build + Fix TMDB Logo
-
-// TODO: Get Test Webhook from Overseerr working - DONE
-// TODO: Add other embeds for different overseerr statuses - Pending, Approved, etc - different layouts? definetely different colours - DONE
-// TODO: Set colors of embeds - DONE
-// TODO: Remove buttons from other embeds - DONE
-// TODO: Issue Comment Button that pops up text input modal - Done
-// TODO: Handle requessts that are already cancelled but the buttons are still active - Done - Works by default thanks to overseerr
 
 // Import the necessary modules
 import { Client, GatewayIntentBits } from 'discord.js';
