@@ -16,9 +16,6 @@ RUN npm install -g typescript
 # Copy all project files to the working directory
 COPY . .
 
-# Copy the .env file to the dist directory
-COPY .env ./dist/
-
 # Compile TypeScript to JavaScript
 RUN npm run build
 
