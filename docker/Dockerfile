@@ -1,23 +1,24 @@
-# Use an official Node.js runtime as the base image
-FROM node:alpine
-
-# Set the working directory in the container
+# ---- Base Node ----
+FROM node:alpine AS base
 WORKDIR /app
-
-# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install project dependencies
-RUN npm install
+# ---- Dependencies ----
+FROM base AS dependencies
+RUN npm ci
 
-# Install TypeScript
-RUN npm install -g typescript
-
-# Copy all project files to the working directory
+# ---- Test ----
+# run linters, setup and tests
+FROM dependencies AS test
 COPY . .
-
-# Compile TypeScript to JavaScript
 RUN npm run build
 
-# Specify the command to run your bot when the container starts
+# ---- Release ----
+FROM base AS release
+# copy production node_modules
+COPY --from=dependencies /app/node_modules ./node_modules
+# copy app sources
+COPY . .
+# compile TypeScript to JavaScript
+RUN npm run build
 CMD ["node", "dist/bot.js"]
