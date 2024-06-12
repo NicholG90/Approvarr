@@ -1,3 +1,5 @@
+// ! ERROR: Butrons not resolving
+// ! ERROR: Comment Submission not working
 // TODO: Add a check to see if the user is an admin
 // TODO: Handle adminstrator permsissions
 // TODO: Message User when their request is approved/available

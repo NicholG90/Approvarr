@@ -66,7 +66,7 @@ export function buttonListener(client: Client) {
                 if (requestType === 'tv') {
                 // Add Season Information
                 }
-                // await overseerrApi(url, 'POST', requestBody);
+                await overseerrApi(url, 'POST', requestBody);
 
                 // Update the embed with the new title and description
                 await updateEmbed(interaction.message, mediaTitle, interaction, 'requested');
