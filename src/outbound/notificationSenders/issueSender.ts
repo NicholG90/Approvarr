@@ -38,7 +38,7 @@ export function issueSender(client: Client, payload: any) {
     // Create an embed using the payload data
     const embed = {
         title: payload.subject,
-        url: `/issues/${payload.issue.id}`,
+        url: `${process.env.OVERSEERR_URL}/issues/${payload.issue.id}`,
         description: payload.event,
         color,
         fields: [

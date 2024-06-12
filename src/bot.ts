@@ -1,6 +1,6 @@
 // TODO: Add a check to see if the user is an admin
+// TODO: Handle adminstrator permsissions
 // TODO: Message User when their request is approved/available
-// TODO: Error handling - specifically the overseerrSender.ts file and type checking
 // TODO: Better TS - specifically get away from any and create interfaces
 // TODO: Update the README.md file
 // TODO Remove logging statements
