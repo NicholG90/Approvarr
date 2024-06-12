@@ -1,5 +1,4 @@
-// Import the necessary modules
-import { MessageEditOptions } from 'discord.js';
+import { MessageEditOptions, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
 //
 export async function updateEmbed(originalMessage: any, mediaTitle: any, interaction: any, action: any) {
     // Capitalize the action
@@ -14,8 +13,26 @@ export async function updateEmbed(originalMessage: any, mediaTitle: any, interac
         embeds: [updatedEmbed],
         components: [],
     };
-    // Edit the original message
-    if (originalMessage) {
-        await originalMessage.edit(editOptions);
-    }
+    const requestExists = new ButtonBuilder()
+        .setCustomId('requestExists')
+        .setDisabled(true)
+        .setLabel('Request Submitted')
+        .setStyle(ButtonStyle.Danger);
+
+    const row = new ActionRowBuilder<ButtonBuilder>()
+        .addComponents(requestExists);
+    console.log(interaction.message.components);
+    await interaction.update({
+        components: [interaction.message.components[1], row],
+    });
+    console.log(interaction.message.components);
+
+    // // Edit the original message
+    // if (originalMessage) {
+    //     const exampleEmbed = new EmbedBuilder()
+    //         .setTitle('Some title')
+    //         .setDescription('Description after the edit');
+
+    //     originalMessage.edit({ embeds: [exampleEmbed] });
+    // }
 }

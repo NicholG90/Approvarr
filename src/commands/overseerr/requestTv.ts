@@ -25,5 +25,5 @@ export async function execute(interaction: any) {
     const tvSearchResultsArrayFiltered = tvSearchResultsArray.filter(
         (result: any) => result.mediaType === 'tv',
     );
-    await mediaSelectList(interaction, tvSearchResultsArrayFiltered, 'TV Series');
+    await mediaSelectList(interaction, tvSearchResultsArrayFiltered);
 }

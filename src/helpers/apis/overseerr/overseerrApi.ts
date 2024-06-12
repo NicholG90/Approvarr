@@ -26,6 +26,7 @@ export async function overseerrApi(
         return response;
     } catch (error) {
         console.warn(error);
+        console.error('Error calling Overseerr API');
         // Handle any errors here
         throw error;
     }

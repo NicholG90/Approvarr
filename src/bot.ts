@@ -1,7 +1,5 @@
-// TODO: Add a command handler
 // TODO: Add a check to see if the user is an admin
 // TODO: Message User when their request is approved/available
-// TODO: Explore other ways to get environment variables
 // TODO: Error handling - specifically the overseerrSender.ts file and type checking
 // TODO: Better TS - specifically get away from any and create interfaces
 // TODO: Update the README.md file
@@ -9,7 +7,7 @@
 // TODO: Look at why everything appears to have Requested Status: Pending
 // TODO: Copy Assets over to the dist folder automatically on build + Fix TMDB Logo
 // TODO: Get existing media as placeholder on select after initial select
-// TODO: Add Year to Select Options
+// TODO: Create Issue within Discord
 
 // Import the necessary modules
 import { Client, GatewayIntentBits } from 'discord.js';
@@ -28,6 +26,7 @@ dotenv.config();
 // Define an async function to start the bot
 async function startBot() {
     // Create a new Discord client with the specified intents
+
     const client = new Client({
         intents: [
             GatewayIntentBits.Guilds,
@@ -53,7 +52,7 @@ async function startBot() {
     const serverID = process.env.SERVER_ID;
 
     if (!serverID) {
-        throw new Error('No channel ID provided.');
+        throw new Error('No server ID provided.');
     }
     // Start the Discord bot by logging in with the bot token
     await client.login(token);
