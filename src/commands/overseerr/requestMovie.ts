@@ -25,5 +25,5 @@ export async function execute(interaction: any) {
     const movieSearchResultsArrayFiltered = movieSearchResultsArray.filter(
         (result: any) => result.mediaType === 'movie',
     );
-    await mediaSelectList(interaction, movieSearchResultsArrayFiltered, 'Movie');
+    await mediaSelectList(interaction, movieSearchResultsArrayFiltered);
 }

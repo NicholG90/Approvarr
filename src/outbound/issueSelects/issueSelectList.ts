@@ -4,13 +4,12 @@ import {
 } from 'discord.js';
 import { OverseerrSearchMediaResults } from '../../interfaces/overseerr';
 
-export async function mediaSelectList(
+export async function issueSelectList(
     interaction: CommandInteraction,
     mediaArray: OverseerrSearchMediaResults[],
 ) {
-    const { mediaType } = mediaArray[0];
     const options = mediaArray.map((media) => {
-        const label = mediaType === 'tv' && media.name
+        const label = media.mediaType === 'tv' && media.name
             ? `${media.name} (${media.firstAirDate?.split('-')[0]})`
             : `${media.title} (${media.releaseDate?.split('-')[0]})` ?? 'Unknown Title';
         return new StringSelectMenuOptionBuilder()
@@ -18,13 +17,13 @@ export async function mediaSelectList(
             .setValue(`${media.id.toString()}-${media.mediaType.toString()}`);
     });
     const selectMenu = new StringSelectMenuBuilder()
-        .setCustomId('mediaSelect')
-        .setPlaceholder('What would you like to request!')
+        .setCustomId('issueReportMedia')
+        .setPlaceholder('What media would you like to report an issue with?')
         .addOptions(...options);
     const row = new ActionRowBuilder<StringSelectMenuBuilder>()
         .addComponents(selectMenu);
     await interaction.reply({
-        content: `Please select a ${mediaType === 'tv' ? 'TV Series' : 'Movie'}:`,
+        content: `Please select the media with an issue:`,
         components: [row],
         ephemeral: true,
     });
