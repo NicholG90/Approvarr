@@ -21,6 +21,7 @@ import { selectListener } from './listeners/selectListener';
 import { commandListener } from './listeners/commandListener';
 import { commandRegister } from './outbound/commandRegister';
 import { errorListener } from './listeners/errorListener';
+import { version } from '../package.json';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -28,6 +29,8 @@ dotenv.config();
 // Define an async function to start the bot
 async function startBot() {
     // Create a new Discord client with the specified intents
+
+    console.info(`Starting Discord Bot, version ${version}.`);
 
     const client = new Client({
         intents: [

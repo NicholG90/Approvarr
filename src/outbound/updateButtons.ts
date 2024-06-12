@@ -9,6 +9,7 @@ export async function updateEmbed(originalMessage: any, mediaTitle: any, interac
             };
             await interaction.update({
                 embeds: [updatedEmbed],
+                components: [],
             });
             break;
         }
@@ -19,6 +20,7 @@ export async function updateEmbed(originalMessage: any, mediaTitle: any, interac
             };
             await interaction.update({
                 embeds: [updatedEmbed],
+                components: [],
             });
             break;
         }
@@ -29,10 +31,11 @@ export async function updateEmbed(originalMessage: any, mediaTitle: any, interac
             };
             await interaction.update({
                 embeds: [updatedEmbed],
+                components: [],
             });
             break;
         }
-        case 'requestMedia': {
+        case 'requested': {
             const requestSubmitted = new ButtonBuilder()
                 .setCustomId('requestSubmitted')
                 .setDisabled(true)
