@@ -19,6 +19,7 @@ export async function execute(interaction: any) {
     const movieSearchResults = await overseerrApi(`/search?query=${movie}`, 'get');
     if (movieSearchResults.data.results.length === 0) {
         await interaction.reply('No results found');
+        return;
     }
     const movieSearchResultsArray = movieSearchResults.data.results;
     // filter out the results that are not movies

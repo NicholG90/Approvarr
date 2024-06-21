@@ -1,8 +1,6 @@
-// ! ERROR: Butrons not resolving
 // ! ERROR: Comment Submission not working
 // TODO: Add a check to see if the user is an admin
 // TODO: Handle adminstrator permsissions
-// TODO: Message User when their request is approved/available
 // TODO: Better TS - specifically get away from any and create interfaces
 // TODO: Update the README.md file
 // TODO Remove logging statements
@@ -10,6 +8,9 @@
 // TODO: Copy Assets over to the dist folder automatically on build + Fix TMDB Logo
 // TODO: Get existing media as placeholder on select after initial select
 // TODO: Create Issue within Discord
+// TODO: Handle Seasons on TV requests and issues
+// TODO: Jellyseer Support
+// TODO: Users requests are auto approving?
 
 // Import the necessary modules
 import { Client, GatewayIntentBits } from 'discord.js';

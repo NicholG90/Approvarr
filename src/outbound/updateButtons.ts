@@ -4,8 +4,8 @@ export async function updateEmbed(originalMessage: any, mediaTitle: any, interac
     switch (action) {
         case 'decline': {
             const updatedEmbed = {
-                title: `Media Request Approved`,
-                description: `Request for ${mediaTitle} has been approved by ${interaction.user.tag}.`,
+                title: `Media Request Declined`,
+                description: `Request for ${mediaTitle} has been declined by ${interaction.user.tag}.`,
             };
             await interaction.update({
                 embeds: [updatedEmbed],
@@ -40,12 +40,12 @@ export async function updateEmbed(originalMessage: any, mediaTitle: any, interac
                 .setCustomId('requestSubmitted')
                 .setDisabled(true)
                 .setLabel('Request Submitted')
-                .setStyle(ButtonStyle.Danger);
+                .setStyle(ButtonStyle.Success);
 
             const row = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(requestSubmitted);
             await interaction.update({
-                components: [interaction.message.components[1], row],
+                components: [row],
             });
             break;
         }
