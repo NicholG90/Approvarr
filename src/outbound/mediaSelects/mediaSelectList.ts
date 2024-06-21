@@ -9,9 +9,10 @@ export async function mediaSelectList(
     mediaArray: OverseerrSearchMediaResults[],
 ) {
     const { mediaType } = mediaArray[0];
+
     const options = mediaArray.map((media) => {
         const label = mediaType === 'tv' && media.name
-            ? `${media.name} (${media.firstAirDate?.split('-')[0]})`
+            ? `${media.title} (${media.firstAirDate?.split('-')[0]})`
             : `${media.title} (${media.releaseDate?.split('-')[0]})` ?? 'Unknown Title';
         return new StringSelectMenuOptionBuilder()
             .setLabel(label)
