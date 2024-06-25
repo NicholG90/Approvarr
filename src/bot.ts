@@ -1,17 +1,3 @@
-// ! ERROR: Comment Submission not working
-// TODO: Add a check to see if the user is an admin
-// TODO: Handle adminstrator permsissions
-// TODO: Better TS - specifically get away from any and create interfaces
-// TODO: Update the README.md file
-// TODO Remove logging statements
-// TODO: Look at why everything appears to have Requested Status: Pending
-// TODO: Copy Assets over to the dist folder automatically on build + Fix TMDB Logo
-// TODO: Get existing media as placeholder on select after initial select
-// TODO: Create Issue within Discord
-// TODO: Handle Seasons on TV requests and issues
-// TODO: Jellyseer Support
-// TODO: Users requests are auto approving?
-
 // Import the necessary modules
 import { Client, GatewayIntentBits } from 'discord.js';
 import * as dotenv from 'dotenv';
@@ -30,7 +16,7 @@ dotenv.config();
 async function startBot() {
     // Create a new Discord client with the specified intents
 
-    console.info(`Starting Discord Bot`);
+    console.info(`Starting Approvarr`);
 
     const client = new Client({
         intents: [
@@ -64,7 +50,9 @@ async function startBot() {
 
     // Start the webhook server
     handleWebhook(client);
-    commandRegister(client, token, serverID);
+    if (process.env.ENABLE_SLASH_COMMANDS === 'true') {
+        commandRegister(client, token, serverID);
+    }
 
     // Set up event listeners
     buttonListener(client);
