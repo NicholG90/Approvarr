@@ -4,6 +4,8 @@ import { execute as executeOverseerrTvRequest } from '../commands/overseerr/requ
 // import { execute as executeOverseerrReportIssue } from '../commands/overseerr/reportIssue';
 import { getDiscordUserIds } from '../helpers/getDiscordUserIds';
 import { globalStore } from '../store/globalStore';
+import { Permission, hasPermission } from '../helpers/permissions';
+import { overseerrApi } from '../helpers/apis/overseerr/overseerrApi';
 
 export function commandListener(client: Client) {
     client.on('interactionCreate', async (interaction) => {
@@ -26,13 +28,41 @@ export function commandListener(client: Client) {
 
         const { commandName } = interaction;
 
+        const userPermissions = await overseerrApi(`/user/${overseerrId}/settings/permissions`, 'GET');
+
         switch (commandName) {
-            case 'request_movie':
+            case 'request_movie': {
+                const request = hasPermission(
+                    Permission.REQUEST,
+                    userPermissions.data.permissions,
+                    { type: 'or' },
+                );
+                if (!request) {
+                    await interaction.reply({
+                        content: 'You do not have permission to request Movies.',
+                        ephemeral: true,
+                    });
+                    return;
+                }
                 executeOverseerrMovieRequest(interaction);
                 break;
-            case 'request_tv':
+            }
+            case 'request_tv': {
+                const request = hasPermission(
+                    Permission.REQUEST,
+                    userPermissions.data.permissions,
+                    { type: 'or' },
+                );
+                if (!request) {
+                    await interaction.reply({
+                        content: 'You do not have permission to request TV shows.',
+                        ephemeral: true,
+                    });
+                    return;
+                }
                 executeOverseerrTvRequest(interaction);
                 break;
+            }
             // case 'report_issue':
             //     executeOverseerrReportIssue(interaction);
             //     break;

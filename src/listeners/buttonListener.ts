@@ -53,6 +53,12 @@ export function buttonListener(client: Client) {
             userPermissions.data.permissions,
             { type: 'or' },
         );
+        const requestMedia = hasPermission(
+            Permission.REQUEST,
+            userPermissions.data.permissions,
+            { type: 'or' },
+        );
+
         switch (interaction.customId) {
             case 'decline': {
                 if (!manageRequests) {
@@ -135,6 +141,13 @@ export function buttonListener(client: Client) {
                 break;
             }
             case 'requestMedia': {
+                if (!requestMedia) {
+                    await interaction.reply({
+                        content: 'You do not have permission to request Movies.',
+                        ephemeral: true,
+                    });
+                    return;
+                }
                 const requestType = interaction.message.interaction?.commandName.split('_')[1];
                 const url = `/request/`;
                 const requestBody = {
