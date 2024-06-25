@@ -81,7 +81,7 @@ export function mediaSender(client: Client, payload: any) {
         });
     }
     // Set the channel ID from the environment variables
-    const channelId = process.env.CHANNEL_ID;
+    const channelId = process.env.REQUEST_CHANNEL_ID || process.env.CHANNEL_ID;
     // Check if the channel ID is defined
     if (!channelId) {
         console.error('Channel ID is undefined in the environment variables.');
