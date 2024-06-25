@@ -3,35 +3,58 @@ import { MessageEditOptions, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRow
 export async function updateEmbed(originalMessage: any, mediaTitle: any, interaction: any, action: any) {
     switch (action) {
         case 'decline': {
-            const updatedEmbed = {
-                title: `Media Request Declined`,
-                description: `Request for ${mediaTitle} has been declined by ${interaction.user.tag}.`,
-            };
+            const mediaDeclined = new ButtonBuilder()
+                .setCustomId('mediaDeclined')
+                .setDisabled(true)
+                .setLabel(`Request declined by ${interaction.user.tag}`)
+                .setStyle(ButtonStyle.Success);
+
+            const row = new ActionRowBuilder<ButtonBuilder>()
+                .addComponents(mediaDeclined);
             await interaction.update({
-                embeds: [updatedEmbed],
-                components: [],
+                components: [row],
             });
             break;
         }
         case 'approve': {
-            const updatedEmbed = {
-                title: `Media Request Approved`,
-                description: `Request for ${mediaTitle} has been approved by ${interaction.user.tag}.`,
-            };
+            const mediaApproved = new ButtonBuilder()
+                .setCustomId('mediaApproved')
+                .setDisabled(true)
+                .setLabel(`Request approved by ${interaction.user.tag}`)
+                .setStyle(ButtonStyle.Success);
+
+            const row = new ActionRowBuilder<ButtonBuilder>()
+                .addComponents(mediaApproved);
             await interaction.update({
-                embeds: [updatedEmbed],
-                components: [],
+                components: [row],
             });
             break;
         }
         case 'resolved': {
-            const updatedEmbed = {
-                title: `Issue Closed`,
-                description: `Issue for ${mediaTitle} has been closed by ${interaction.user.tag}.`,
-            };
+            const issueClosed = new ButtonBuilder()
+                .setCustomId('issueClosed')
+                .setDisabled(true)
+                .setLabel(`Issue Closed by ${interaction.user.tag}`)
+                .setStyle(ButtonStyle.Success);
+
+            const row = new ActionRowBuilder<ButtonBuilder>()
+                .addComponents(issueClosed);
             await interaction.update({
-                embeds: [updatedEmbed],
-                components: [],
+                components: [row],
+            });
+            break;
+        }
+        case 'comment': {
+            const commentSubmitted = new ButtonBuilder()
+                .setCustomId('commentSubmitted')
+                .setDisabled(true)
+                .setLabel(`Comment Submitted by ${interaction.user.tag}`)
+                .setStyle(ButtonStyle.Success);
+
+            const row = new ActionRowBuilder<ButtonBuilder>()
+                .addComponents(commentSubmitted);
+            await interaction.update({
+                components: [row],
             });
             break;
         }

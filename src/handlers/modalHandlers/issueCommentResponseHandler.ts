@@ -1,5 +1,6 @@
 import { Interaction } from 'discord.js';
 import { overseerrApi } from '../../helpers/apis/overseerr/overseerrApi';
+import { updateEmbed } from '../../outbound/updateButtons';
 
 export async function issueCommentResponseHandler(interaction: Interaction) {
     if (!interaction.isModalSubmit()) return;
@@ -36,5 +37,5 @@ export async function issueCommentResponseHandler(interaction: Interaction) {
         });
         return;
     }
-    await interaction.reply({ content: 'Your comment was submitted successfully!', ephemeral: true });
+    await updateEmbed(interaction.message, mediaTitle, interaction, 'comment');
 }
