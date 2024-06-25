@@ -4,7 +4,7 @@ export async function getDiscordUserIds() {
     // Function to get the number of users
     async function numUsers(): Promise<number> {
         try {
-            const response = await overseerrApi('/user', 'GET', { take: 1 }, process.env.OVERSEERR_API_KEY);
+            const response = await overseerrApi('/user', 'GET', { take: 1 });
             return response.data.pageInfo.results;
         } catch (error) {
             console.error('Exception on querying Overseerr users:', error);
@@ -32,7 +32,7 @@ export async function getDiscordUserIds() {
     // Function to get Discord ID for a specific user
     async function discordId(ovsrId: number): Promise<string | null> {
         try {
-            const response = await overseerrApi(`/user/${ovsrId}`, 'GET', undefined, process.env.OVERSEERR_API_KEY);
+            const response = await overseerrApi(`/user/${ovsrId}`, 'GET', undefined);
             // Check if discordId exists
             if (response.data.settings && 'discordId' in response.data.settings) {
                 return response.data.settings.discordId;

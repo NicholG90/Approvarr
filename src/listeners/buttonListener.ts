@@ -5,6 +5,8 @@ import {
 import { overseerrApi } from '../helpers/apis/overseerr/overseerrApi';
 import { updateEmbed } from '../outbound/updateButtons';
 import { globalStore } from '../store/globalStore';
+import { getDiscordUserIds } from '../helpers/getDiscordUserIds';
+import { Permission, hasPermission } from '../helpers/permissions';
 
 export function buttonListener(client: Client) {
     client.on('interactionCreate', async (interaction) => {
@@ -18,37 +20,102 @@ export function buttonListener(client: Client) {
         }
         const mediaTitle = interaction.message.embeds[0].title;
         const uniqueId = buttonID.value;
-        const userId = globalStore.overseerrId ? parseInt(globalStore.overseerrId, 10) : null;
+        let userId = globalStore.overseerrId ? parseInt(globalStore.overseerrId, 10) : null;
+
+        // If parsing fails, attempt to find the user ID in Discord user IDs
+        if (!userId) {
+            const users = await getDiscordUserIds();
+            const userKey = Object.keys(users).find((key: any) => users[key] === interaction.user.id);
+            if (userKey !== undefined) {
+                userId = parseInt(userKey, 10);
+            } else {
+                userId = null;
+            }
+        }
+
+        // If the user ID is still not found, reply with an error message
+        if (!userId) {
+            await interaction.reply({
+                content: 'Your Discord ID is not linked to an Overseerr account.',
+                ephemeral: true,
+            });
+            return;
+        }
         // check if the user is an admin
-        const userData = await overseerrApi(`/user/${userId}`, 'GET');
-        console.log(userData);
+        const userPermissions = await overseerrApi(`/user/${userId}/settings/permissions`, 'GET');
+        const manageRequests = hasPermission(
+            Permission.MANAGE_REQUESTS,
+            userPermissions.data.permissions,
+            { type: 'or' },
+        );
+        const manageIssues = hasPermission(
+            Permission.MANAGE_ISSUES,
+            userPermissions.data.permissions,
+            { type: 'or' },
+        );
         switch (interaction.customId) {
             case 'decline': {
+                if (!manageRequests) {
+                    await interaction.reply({
+                        content: 'You do not have permission to decline requests.',
+                        ephemeral: true,
+                    });
+                    return;
+                }
                 const url = `/request/${uniqueId}/decline`;
                 const response = await overseerrApi(url, 'POST');
-                if (response.status === 204) {
+                if (response.status === 200) {
                     await updateEmbed(interaction.message, mediaTitle, interaction, 'decline');
                 } else {
                     await interaction.reply({
-                        content: 'An error occurred while declining the request.',
+                        content: 'An error occurred while declining the request. Do you have permission?',
                         ephemeral: true,
                     });
                 }
                 break;
             }
             case 'approve': {
+                if (!manageRequests) {
+                    await interaction.reply({
+                        content: 'You do not have permission to approve requests.',
+                        ephemeral: true,
+                    });
+                    return;
+                }
                 const url = `/request/${uniqueId}/approve`;
-                await overseerrApi(url, 'POST');
+                const response = await overseerrApi(url, 'POST');
+                if (response.status === 200) {
+                    await updateEmbed(interaction.message, mediaTitle, interaction, 'approve');
+                } else {
+                    await interaction.reply({
+                        content: 'An error occurred while approving the request.',
+                        ephemeral: true,
+                    });
+                }
                 await updateEmbed(interaction.message, mediaTitle, interaction, 'approve');
                 break;
             }
             case 'closeIssue': {
+                if (!manageIssues) {
+                    await interaction.reply({
+                        content: 'You do not have permission to close issues.',
+                        ephemeral: true,
+                    });
+                    return;
+                }
                 const url = `/issue/${uniqueId}/resolved`;
                 await overseerrApi(url, 'POST');
                 await updateEmbed(interaction.message, mediaTitle, interaction, 'resolved');
                 break;
             }
             case 'comment': {
+                if (!manageIssues) {
+                    await interaction.reply({
+                        content: 'You do not have permission to comment on issues.',
+                        ephemeral: true,
+                    });
+                    return;
+                }
                 const modal = new ModalBuilder()
                     .setCustomId('issueCommentResponse')
                     .setTitle('Add Comment');
@@ -69,7 +136,6 @@ export function buttonListener(client: Client) {
             }
             case 'requestMedia': {
                 const requestType = interaction.message.interaction?.commandName.split('_')[1];
-
                 const url = `/request/`;
                 const requestBody = {
                     mediaType: requestType,
@@ -81,7 +147,6 @@ export function buttonListener(client: Client) {
                 }
 
                 await overseerrApi(url, 'POST', requestBody);
-
                 // Update the embed with the new title and description
                 await updateEmbed(interaction.message, mediaTitle, interaction, 'requested');
             }

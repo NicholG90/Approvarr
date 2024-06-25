@@ -28,7 +28,7 @@ export async function issueCommentResponseHandler(interaction: Interaction) {
     const uniqueId = buttonID.value;
 
     const url = `/issue/${uniqueId}/comment`;
-    const apiResponse = await overseerrApi(url, 'POST', 'comment', JSON.stringify(messageToPost));
+    const apiResponse = await overseerrApi(url, 'POST', JSON.stringify(messageToPost));
     // check if the response was received successfull
     if (apiResponse.status !== 200) {
         await interaction.reply({
