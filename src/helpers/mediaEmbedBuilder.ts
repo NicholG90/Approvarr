@@ -10,12 +10,13 @@ export async function mediaEmbedBuilder(interaction: Interaction): Promise<any> 
 
     const mediaId = interaction.values[0].split('-')[0].trim();
     const mediaInfo = (await overseerrApi(`/${mediaType}/${mediaId}`, 'GET')).data;
-    mediaInfo.name = `
-    ${mediaInfo.title} (${mediaType === 'tv'
-    ? mediaInfo.firstAirDate?.split('-')[0]
-    : mediaInfo.releaseDate?.split('-')[0]})
-    `;
+    mediaInfo.name = `${mediaType === 'tv'
+        ? mediaInfo.name
+        : mediaInfo.title} (${mediaType === 'tv'
+        ? mediaInfo.firstAirDate?.split('-')[0]
+        : mediaInfo.releaseDate?.split('-')[0]})`;
 
+    console.log(mediaInfo.name);
     // TODO: Add Logic to list seasons here
     const mediaEmbed = {
         title: mediaInfo.name,

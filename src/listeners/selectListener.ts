@@ -3,6 +3,7 @@ import { issueTypeSubmitHandler } from '../handlers/selectHandlers/issueTypeSubm
 import { issueReportSubmitHandler } from '../handlers/selectHandlers/issueReportSubmitHandler';
 import { mediaRequestSubmitHandler } from '../handlers/selectHandlers/mediaRequestSubmitHandler';
 import { mediaEmbedBuilder } from '../helpers/mediaEmbedBuilder';
+import { tvSeasonSelectHandler } from '../handlers/selectHandlers/tvSeasonSelectHandler';
 
 export function selectListener(client: Client) {
     client.on('interactionCreate', async (interaction) => {
@@ -19,6 +20,10 @@ export function selectListener(client: Client) {
             }
             case 'mediaSelect': {
                 const mediaEmbed = await mediaEmbedBuilder(interaction);
+                const mediaType = interaction.values[0].split('-')[1].trim();
+                if (mediaType === 'tv') {
+                    tvSeasonSelectHandler(interaction, mediaEmbed);
+                }
                 await mediaRequestSubmitHandler(interaction, mediaEmbed);
                 break;
             }
