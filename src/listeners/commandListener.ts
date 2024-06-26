@@ -1,9 +1,8 @@
 import { Client } from 'discord.js';
 import { execute as executeOverseerrMovieRequest } from '../commands/overseerr/requestMovie';
 import { execute as executeOverseerrTvRequest } from '../commands/overseerr/requestTv';
-// import { execute as executeOverseerrReportIssue } from '../commands/overseerr/reportIssue';
+import { execute as executeOverseerrReportIssue } from '../commands/overseerr/reportIssue';
 import { getDiscordUserIds } from '../helpers/getDiscordUserIds';
-import { globalStore } from '../store/globalStore';
 import { Permission, hasPermission } from '../helpers/permissions';
 import { overseerrApi } from '../helpers/apis/overseerr/overseerrApi';
 
@@ -24,7 +23,6 @@ export function commandListener(client: Client) {
             });
             return;
         }
-        globalStore.overseerrId = overseerrId;
 
         const { commandName } = interaction;
 
@@ -63,9 +61,9 @@ export function commandListener(client: Client) {
                 executeOverseerrTvRequest(interaction);
                 break;
             }
-            // case 'report_issue':
-            //     executeOverseerrReportIssue(interaction);
-            //     break;
+            case 'report_issue':
+                executeOverseerrReportIssue(interaction);
+                break;
             default:
                 console.error('Invalid command');
         }

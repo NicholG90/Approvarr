@@ -14,7 +14,7 @@ export async function issueSelectList(
             : `${media.title} (${media.releaseDate?.split('-')[0]})` ?? 'Unknown Title';
         return new StringSelectMenuOptionBuilder()
             .setLabel(label)
-            .setValue(`${media.id.toString()}-${media.mediaType.toString()}`);
+            .setValue(`${media.id.toString()}-${media.mediaType.toString()}-${media.mediaInfo.id.toString()}`);
     });
     const selectMenu = new StringSelectMenuBuilder()
         .setCustomId('issueReportMedia')
