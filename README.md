@@ -8,6 +8,8 @@ An \*arr Request & Approval Bot for Discord
 - Allows users to use Discord slash command to request media.
 - Simple to configure - No frontend, just set up the docker!
 
+## Installation
+
 
 #### Want to get started? Head to the docs
 
