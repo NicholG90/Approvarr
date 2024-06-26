@@ -5,8 +5,12 @@ import { issueCommentSubmitHandler } from '../handlers/modalHandlers/issueCommen
 export function modalListener(client: Client) {
     client.on('interactionCreate', async (interaction) => {
         if (!interaction.isModalSubmit()) return;
-
-        switch (interaction.customId) {
+        // Issue Type is passed as part of the custom ID so we need to split it
+        let { customId } = interaction;
+        if (interaction.customId.includes('-')) {
+            [customId] = interaction.customId.split('-');
+        }
+        switch (customId) {
             case 'issueCommentResponse':
                 await issueCommentResponseHandler(interaction);
                 break;

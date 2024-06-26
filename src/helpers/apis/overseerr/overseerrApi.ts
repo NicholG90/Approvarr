@@ -5,15 +5,17 @@ export async function overseerrApi(
     url: string,
     method: Method,
     requestBody?: any,
-    apiKey: string = process.env.OVERSEERR_API_KEY || '',
+    userId?: number,
 ): Promise<AxiosResponse> {
     const apiUrl = `${process.env.OVERSEERR_URL}/api/v1${url}`;
+    const apiKey = process.env.OVERSEERR_API_KEY || '';
     // Check if the Overseerr API key is defined
     try {
         // Set the request headers
         const headers = {
             'Content-Type': 'application/json',
             'X-Api-Key': apiKey,
+            'X-API-User': userId ? userId.toString() : '',
         };
         // Send the request to the Overseerr API
         const response: AxiosResponse = await axios({

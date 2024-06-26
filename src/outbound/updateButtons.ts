@@ -72,6 +72,20 @@ export async function updateEmbed(originalMessage: any, mediaTitle: any, interac
             });
             break;
         }
+        case 'report': {
+            const reportSubmitted = new ButtonBuilder()
+                .setCustomId('reportSubmitted')
+                .setDisabled(true)
+                .setLabel('Issue Report Submitted')
+                .setStyle(ButtonStyle.Success);
+
+            const row = new ActionRowBuilder<ButtonBuilder>()
+                .addComponents(reportSubmitted);
+            await interaction.update({
+                components: [row],
+            });
+            break;
+        }
         default: {
             console.error('Invalid action provided.');
         }

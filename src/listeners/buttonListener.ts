@@ -4,7 +4,6 @@ import {
 } from 'discord.js';
 import { overseerrApi } from '../helpers/apis/overseerr/overseerrApi';
 import { updateEmbed } from '../outbound/updateButtons';
-import { globalStore } from '../store/globalStore';
 import { getDiscordUserIds } from '../helpers/getDiscordUserIds';
 import { Permission, hasPermission } from '../helpers/permissions';
 
@@ -20,21 +19,21 @@ export function buttonListener(client: Client) {
         }
         const mediaTitle = interaction.message.embeds[0].title;
         const uniqueId = buttonID.value;
-        let userId = globalStore.overseerrId ? parseInt(globalStore.overseerrId, 10) : null;
+        // use overseerr API to get user's overseerr ID
+        const users = await getDiscordUserIds();
+        // look for interaction.user.id in the values of the users object
+        const overseerrId = Object.keys(users).find((key: any) => users[key] === interaction.user.id);
 
-        // If parsing fails, attempt to find the user ID in Discord user IDs
-        if (!userId) {
-            const users = await getDiscordUserIds();
-            const userKey = Object.keys(users).find((key: any) => users[key] === interaction.user.id);
-            if (userKey !== undefined) {
-                userId = parseInt(userKey, 10);
-            } else {
-                userId = null;
-            }
+        if (!overseerrId) {
+            // if the user's discord ID is not found in the users object, return an error
+            await interaction.reply({
+                content: 'Your discord ID is not linked to an Overseerr account.',
+                ephemeral: true,
+            });
+            return;
         }
-
         // If the user ID is still not found, reply with an error message
-        if (!userId) {
+        if (!overseerrId) {
             await interaction.reply({
                 content: 'Your Discord ID is not linked to an Overseerr account.',
                 ephemeral: true,
@@ -42,7 +41,7 @@ export function buttonListener(client: Client) {
             return;
         }
         // check if the user is an admin
-        const userPermissions = await overseerrApi(`/user/${userId}/settings/permissions`, 'GET');
+        const userPermissions = await overseerrApi(`/user/${overseerrId}/settings/permissions`, 'GET');
         const manageRequests = hasPermission(
             Permission.MANAGE_REQUESTS,
             userPermissions.data.permissions,
@@ -153,13 +152,12 @@ export function buttonListener(client: Client) {
                 const requestBody = {
                     mediaType: requestType,
                     mediaId: parseInt(uniqueId, 10),
-                    userId: userId || null,
                 };
                 if (requestType === 'tv') {
                 // Add Season Information
                 }
 
-                await overseerrApi(url, 'POST', requestBody);
+                await overseerrApi(url, 'POST', requestBody, parseInt(overseerrId, 10));
                 // Update the embed with the new title and description
                 await updateEmbed(interaction.message, mediaTitle, interaction, 'requested');
             }

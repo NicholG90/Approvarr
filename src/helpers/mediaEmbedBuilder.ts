@@ -5,9 +5,11 @@ import { EmbedColors } from '../constants/notificationData';
 export async function mediaEmbedBuilder(interaction: Interaction): Promise<any> {
     if (!interaction.isStringSelectMenu()) return;
     const mediaType = interaction.values[0].split('-')[1].trim();
-    const mediaId = interaction.values[0].split('-')[0].trim();
+    let internalMediaId = null;
+    if (interaction.customId === 'issueReportMedia') internalMediaId = interaction.values[0].split('-')[2].trim();
 
-    const mediaInfo = (await overseerrApi(`/${mediaType}/${mediaId}`, 'get')).data;
+    const mediaId = interaction.values[0].split('-')[0].trim();
+    const mediaInfo = (await overseerrApi(`/${mediaType}/${mediaId}`, 'GET')).data;
     mediaInfo.name = `
     ${mediaInfo.title} (${mediaType === 'tv'
     ? mediaInfo.firstAirDate?.split('-')[0]
@@ -27,7 +29,7 @@ export async function mediaEmbedBuilder(interaction: Interaction): Promise<any> 
             },
             {
                 name: 'Media ID',
-                value: mediaInfo.id,
+                value: internalMediaId || mediaInfo.id,
                 inline: true,
             },
             {

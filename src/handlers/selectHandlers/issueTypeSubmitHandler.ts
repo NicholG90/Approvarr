@@ -3,8 +3,11 @@ import { Interaction, ModalBuilder, TextInputBuilder, ActionRowBuilder, TextInpu
 export async function issueTypeSubmitHandler(interaction: Interaction) {
     if (!interaction.isStringSelectMenu()) return;
 
+    // Adding the Issue Type to the customID so we can access it on the modal
+    const issueType = interaction.values[0];
+
     const modal = new ModalBuilder()
-        .setCustomId('issueCommentSubmit')
+        .setCustomId(`issueCommentSubmit-${issueType}`)
         .setTitle('Report Issue');
 
     const issueReportComment = new TextInputBuilder()

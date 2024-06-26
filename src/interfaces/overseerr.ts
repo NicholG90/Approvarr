@@ -5,4 +5,7 @@ export interface OverseerrSearchMediaResults {
     firstAirDate?: string;
     releaseDate?: string;
     mediaType: string;
+    mediaInfo: {
+        id: number;
+    }
 }

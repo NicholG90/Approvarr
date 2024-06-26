@@ -19,8 +19,6 @@ export async function getDiscordUserIds() {
             const response = await overseerrApi(
                 `/user?take=${totalUsers}`,
                 'GET',
-                undefined,
-                process.env.OVERSEERR_API_KEY,
             );
             return response.data.results.map((user: any) => user.id);
         } catch (error) {
@@ -32,7 +30,7 @@ export async function getDiscordUserIds() {
     // Function to get Discord ID for a specific user
     async function discordId(ovsrId: number): Promise<string | null> {
         try {
-            const response = await overseerrApi(`/user/${ovsrId}`, 'GET', undefined);
+            const response = await overseerrApi(`/user/${ovsrId}`, 'GET');
             // Check if discordId exists
             if (response.data.settings && 'discordId' in response.data.settings) {
                 return response.data.settings.discordId;
